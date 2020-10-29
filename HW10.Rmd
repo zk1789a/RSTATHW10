@@ -119,24 +119,18 @@ global <- cases_global %>% full_join(deaths_global) %>%
 global
 ```
 ```{r}
-US <-  deaths_us %>%
+US <- deaths_us %>%
   full_join(cases_us, by = c("Combined_Key", "date", "Admin2", "Province_State", "Country_Region")) %>%
     rename(Long = Long_.x, Lat = Lat.x)  %>%
     select(Admin2, Province_State, Country_Region, Lat, Long, Population, date, cases, Deaths)
 
 ```
 
-
-
 ```{r}
+US_by_state <- US %>% group_by(Province_State, Country_Region, date) %>% summarize(Confirmed_cases = sum(cases), Deaths = sum(Deaths), Lat = median(Lat), Long = median(Long), Population = sum(Population)) %>% mutate(Deaths_per_mill = (Deaths / Population) * 1000000) %>% select(Province_State, Country_Region, date, Confirmed_cases, Deaths, Deaths_per_mill, Population, Lat, Long) %>% ungroup() 
 
-US_by_state <- US %>% group_by(Province_State, Country_Region, date) %>% summarize(Confirmed_cases = sum(cases_us$cases), Deaths = sum(Deaths), Lat = median(Lat), Long = median(Long), Population = sum(Population)) %>% mutate(Deaths_per_mill = Deaths * 1000000 / Population) %>% select(Province_State, Country_Region, date, Confirmed_cases, Deaths, Deaths_per_mill, Population, Lat, Long) %>% ungroup() 
-```  
-
-```{r}
 US_by_state
-```
-
+```  
 
 
 # Exercise 5 - Replace the US observations in the global dataset with the US data. Add a new variable called continent to the dataset. Be sure there are no NA’s for continent. Also create a new variable Country_State that comines the Province_State with Country_Region.
@@ -146,9 +140,6 @@ US_by_state
 exp_global <- global %>% 
   filter(Country_Region != "US") %>% 
   bind_rows(US_by_state)
-```
-
-
 ```
 
 # Exercise 7 - 
