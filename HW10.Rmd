@@ -17,7 +17,7 @@ deaths_by_state <- dat %>%
   arrange(desc(total_deaths))
 ```
 
-# Exercise 1 - create a    tibble that has both deaths and total cases per state, arranged by the total number of deaths in descending order   
+# Exercise 1 - create a tibble that has both deaths and total cases per state, arranged by the total number of deaths in descending order   
 
 ```{r}
 state.1 <- 
@@ -132,7 +132,7 @@ US_by_state
 
 # Exercise 5 - Replace the US observations in the global dataset with the US data. Add a new variable called continent to the dataset. Be sure there are no NA’s for continent. Also create a new variable Country_State that comines the Province_State with Country_Region.
 
-```{r expand_US, echo = FALSE}
+```{r expand_US, echo=FALSE}
 exp_global <- 
   global %>% 
   filter(Country_Region != "US")
