@@ -11,7 +11,7 @@ dat <-
   read_csv("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv")
 deaths_by_state <- dat %>%
   group_by(state,date) %>%
-  summarize(total_deaths = sum(deaths)) %>%
+  summarize(total_deaths=sum(deaths)) %>%
   ungroup() %>%
   filter(date == max(date)) %>%
   arrange(desc(total_deaths))
@@ -132,9 +132,7 @@ US_by_state <- US %>% group_by(Province_State, Country_Region, date) %>% summari
 US_by_state
 ```  
 
-
 # Exercise 5 - Replace the US observations in the global dataset with the US data. Add a new variable called continent to the dataset. Be sure there are no NA’s for continent. Also create a new variable Country_State that comines the Province_State with Country_Region.
-
 
 ```{r expand_US, echo = FALSE}
 exp_global <- global %>% 
