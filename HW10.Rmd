@@ -93,28 +93,26 @@ deaths_us <- read_csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19
 ```{r}
 cases_global <- 
   cases_global %>% 
-  pivot_longer(cols = c(`1/22/20`:`10/27/20`), names_to = "date", values_to = "cases")
+  pivot_longer(cols = c(`1/22/20`:`10/28/20`), names_to = "date", values_to = "cases")
 
 deaths_global <- 
   deaths_global %>% 
-  pivot_longer(cols = c(`1/22/20`:`10/27/20`), names_to = "date", values_to = "Deaths")
+  pivot_longer(cols = c(`1/22/20`:`10/28/20`), names_to = "date", values_to = "Deaths")
 
 cases_us <- 
   cases_us %>% 
-  pivot_longer(cols = c(`1/22/20`:`10/27/20`), names_to = "date", values_to = "cases")
+  pivot_longer(cols = c(`1/22/20`:`10/28/20`), names_to = "date", values_to = "cases")
 
 deaths_us <- 
   deaths_us %>% 
-  pivot_longer(cols = c(`1/22/20`:`10/27/20`), names_to = "date", values_to = "Deaths")
+  pivot_longer(cols = c(`1/22/20`:`10/28/20`), names_to = "date", values_to = "Deaths")
 
 ```
 
 
 ```{r}
 global <- cases_global %>% full_join(deaths_global) %>%
-  rename(Country_Region = `Country/Region`, Province_State = `Province/State`) %>%
-  mutate(Date = mdy(date))
-
+  rename(Country_Region = `Country/Region`, Province_State = `Province/State`) 
 
 global
 ```
@@ -127,7 +125,7 @@ US <- deaths_us %>%
 ```
 
 ```{r}
-US_by_state <- US %>% group_by(Province_State, Country_Region, date) %>% summarize(Confirmed_cases = sum(cases), Deaths = sum(Deaths), Lat = median(Lat), Long = median(Long), Population = sum(Population)) %>% mutate(Deaths_per_mill = (Deaths / Population) * 1000000) %>% select(Province_State, Country_Region, date, Confirmed_cases, Deaths, Deaths_per_mill, Population, Lat, Long) %>% ungroup() 
+US_by_state <- US %>% group_by(Province_State, Country_Region, date) %>% summarize(cases = sum(cases), Deaths = sum(Deaths), Lat = median(Lat), Long = median(Long), Population = sum(Population)) %>% mutate(Deaths_per_mill = (Deaths / Population) * 1000000) %>% select(Province_State, Country_Region, date, cases, Deaths, Deaths_per_mill, Population, Lat, Long) %>% ungroup() 
 
 US_by_state
 ```  
@@ -135,9 +133,12 @@ US_by_state
 # Exercise 5 - Replace the US observations in the global dataset with the US data. Add a new variable called continent to the dataset. Be sure there are no NA’s for continent. Also create a new variable Country_State that comines the Province_State with Country_Region.
 
 ```{r expand_US, echo = FALSE}
-exp_global <- global %>% 
-  filter(Country_Region != "US") %>% 
-  bind_rows(US_by_state)
+exp_global <- 
+  global %>% 
+  filter(Country_Region != "US")
+
+global_by_country <- 
+  full_join(US_by_state, exp_global)
 ```
 
 # Exercise 7 - 
